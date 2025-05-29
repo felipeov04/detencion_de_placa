@@ -3,28 +3,28 @@ import streamlit as st
 import base64
 from openai import OpenAI
 
-# Estilos CSS personalizados
+# ✅ 1. Esto debe ir primero SIEMPRE
+st.set_page_config(page_title="Análisis de Imagen", layout="centered", initial_sidebar_state="collapsed")
+
+# ✅ 2. Luego, aplicamos el estilo personalizado
 st.markdown("""
     <style>
-        /* Fondo y fuentes */
         body {
             background-color: white !important;
-            color: #222222 !important;
+            color: #1a1a1a;
             font-family: 'Segoe UI', sans-serif;
         }
         .stApp {
             background-color: white;
         }
-        h1 {
-            color: #1a1a1a;
+        h1, h2, h3, h4 {
+            color: #111;
             font-weight: 700;
         }
         label, .stTextInput > div > div > input {
             font-weight: 600;
             color: #222;
         }
-
-        /* Inputs y botones */
         .stTextInput input, .stTextArea textarea {
             border: 1px solid #cccccc;
             border-radius: 8px;
@@ -32,62 +32,56 @@ st.markdown("""
             background-color: #f9f9f9;
         }
         button[kind="secondary"] {
-            background-color: #1f77b4 !important;
+            background-color: #005f73 !important;
             color: white !important;
             border-radius: 8px;
             font-weight: bold;
         }
         .stButton button:hover {
-            background-color: #105d8d !important;
+            background-color: #0a9396 !important;
             color: #fff;
         }
-
-        /* Expander */
         .st-expanderHeader {
             font-weight: 600;
-            color: #333333;
+            color: #444;
         }
-
-        /* Spinner */
         .stSpinner > div > div {
-            color: #1f77b4;
+            color: #005f73;
         }
     </style>
 """, unsafe_allow_html=True)
 
-
-# Configuración de la página
-st.set_page_config(page_title="Análisis de Imagen", layout="centered", initial_sidebar_state="collapsed")
+# ✅ 3. Título
 st.title("🔍 Análisis de Imagen")
 
-# Ingreso de clave API
+# ✅ 4. Clave API
 ke = st.text_input('🔑 Ingresa tu clave de OpenAI')
 os.environ['OPENAI_API_KEY'] = ke
 api_key = os.environ['OPENAI_API_KEY']
 
-# Cliente OpenAI
+# ✅ 5. Inicializar cliente
 client = OpenAI(api_key=api_key)
 
-# Subir imagen
+# ✅ 6. Subir imagen
 uploaded_file = st.file_uploader("📁 Sube una imagen", type=["jpg", "png", "jpeg"])
 
 if uploaded_file:
     with st.expander("📸 Vista previa de la imagen", expanded=True):
         st.image(uploaded_file, caption=uploaded_file.name, use_container_width=True)
 
-# Detalles opcionales
+# ✅ 7. Detalles opcionales
 show_details = st.toggle("✏️ Adicionar detalles sobre la imagen", value=False)
-
 if show_details:
     additional_details = st.text_area("🗒️ Contexto adicional:", disabled=not show_details)
 
-# Botón para analizar
+# ✅ 8. Botón de análisis
 analyze_button = st.button("🚀 Analiza la imagen", type="secondary")
 
-# Procesamiento
+# ✅ 9. Función para codificar imagen
 def encode_image(image_file):
     return base64.b64encode(image_file.getvalue()).decode("utf-8")
 
+# ✅ 10. Análisis
 if uploaded_file is not None and api_key and analyze_button:
     with st.spinner("🧠 Analizando imagen..."):
         base64_image = encode_image(uploaded_file)
@@ -126,3 +120,4 @@ else:
         st.warning("⚠️ Por favor, sube una imagen.")
     if not api_key:
         st.warning("⚠️ Ingresa tu clave de API.")
+
