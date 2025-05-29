@@ -1,55 +1,75 @@
+import os
+import streamlit as st
+import base64
+from openai import OpenAI
+
+# ✅ Esto debe ser lo PRIMERO que usas de Streamlit
+st.set_page_config(page_title="Análisis de Imagen", layout="centered", initial_sidebar_state="collapsed")
+
+# ✅ Aquí va el BLOQUE DE ESTILO para aplicar la nueva interfaz
 st.markdown("""
-    <style>
-        body {
-            background-color: white !important;
-            color: #000 !important;
-            font-family: 'Segoe UI', sans-serif;
-        }
-        .stApp {
-            background-color: white;
-        }
-        h1, h2, h3, h4, h5, h6, label, p, div, span, .stTextInput label, .stTextArea label {
-            color: #000 !important;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-        .stTextInput input, .stTextArea textarea {
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 10px;
-            background-color: #fdfdfd;
-            color: #000;
-            font-weight: 500;
-        }
+<style>
+    html, body, .stApp {
+        background-color: #fefefe;
+        color: #1a1a1a !important;
+        font-family: 'Inter', sans-serif;
+    }
 
-        .stButton>button {
-            background-color: #00717e !important;
-            color: white !important;
-            font-weight: bold;
-            border-radius: 8px;
-        }
+    h1, h2, h3, h4, h5, h6 {
+        color: #111 !important;
+        font-weight: 700;
+    }
 
-        .stButton>button:hover {
-            background-color: #004e56 !important;
-        }
+    .stTextInput input, .stTextArea textarea {
+        background-color: white;
+        color: #1a1a1a !important;
+        border: 1px solid #dcdcdc;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
 
-        .st-expanderHeader {
-            font-weight: 600;
-            color: #000 !important;
-        }
+    label, .stMarkdown, .st-expanderHeader {
+        color: #222 !important;
+        font-weight: 600;
+    }
 
-        .stMarkdown, .stAlert, .stFileUploader, .css-1aumxhk, .css-1v0mbdj {
-            color: #000 !important;
-        }
+    .stButton>button {
+        background-color: #0077b6 !important;
+        color: white !important;
+        border-radius: 8px;
+        font-weight: 600;
+        border: none;
+        padding: 10px 18px;
+    }
 
-        /* Botones del uploader */
-        .stFileUploader .css-14xtw13 {
-            background-color: #003f4c !important;
-            color: white !important;
-        }
+    .stButton>button:hover {
+        background-color: #023e8a !important;
+    }
 
-        /* Mensaje de advertencia */
-        .stWarning {
-            color: #000 !important;
-        }
-    </style>
+    .st-expander {
+        border: 1px solid #eaeaea;
+        border-radius: 8px;
+        background-color: #fafafa;
+    }
+
+    .stFileUploader {
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+
+    .stAlert {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+        border-radius: 8px;
+        padding: 10px;
+    }
+</style>
 """, unsafe_allow_html=True)
+
+# ✅ A partir de aquí sigue tu app normalmente
+st.title("🔍 Análisis de Imagen")
